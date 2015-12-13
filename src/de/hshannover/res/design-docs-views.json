@@ -1,0 +1,26 @@
+{
+   "_id": "_design/graphQueries",
+   "language": "javascript",
+   "views": {
+       "friends": {
+           "map": "function(doc) {\n  if (!doc._id.match(/^friendship:/)) return\n\n  var ids = doc._id.match(/person:([^:]*)/g)\n  var one = ids[0]\n  var two = ids[1]\n\n  emit(one, two);\n  emit(two, one);\n}",
+           "reduce": "function(key, values, rereduce) {\n  if(values.length) {\n    var unique_friends = {};\n    values.forEach(function(friend) {\n      if(!unique_friends[friend]) {\n        unique_friends[friend] = true;\n      }\n    });\n    return Object.keys(unique_friends);\n  }\n  return values;\n}"
+       },
+       "friends2D": {
+           "map": "function(doc) {\n  if(!doc._id.match(/^person:/)) return\n\n  if(doc.friends) {\n    for(var f1 in doc.friends) {\n      emit(doc._id, doc.friends[f1]);\n      for(var f2 in doc.friends) {\n        if(f1 !== f2) {\n          emit(doc.friends[f2], doc.friends[f1]);\n        }\n      }      \n    }\n  }\n}",
+           "reduce": "function(key, values, rereduce) {\n  if(values.length) {\n    var unique_friends = {};\n    values.forEach(function(friend) {\n      if(!unique_friends[friend]) {\n        unique_friends[friend] = true;\n      }\n    });\n    return Object.keys(unique_friends);\n  } else {\n    return values;\n  }\n}"
+       },
+       "degree": {
+           "map": "function(doc) {\n  if(!doc._id.match(/^person:/)) return\n  if(doc.friends) {\n    emit(doc._id, doc.friends.length);\n  }\n}",
+           "reduce": "function(key, values, rereduce) {\n return sum(values);\n}"
+       },
+       "allEdges": {
+           "map": "function(doc) {\n  if (!doc._id.match(/^friendship:/)){\n\temit(\"Kanten\", 1);\n  }\n}\n",
+           "reduce": "function(key, values) {\n return sum(values);\n}"
+       },
+       "degreeMinMax": {
+           "map": "function(doc) {\n  if(!doc._id.match(/^person:/)) return\n  if(doc.friends) {\n    emit(doc.friends.length, doc._id)\n  }\n}",
+           "reduce": "function(key, values, rereduce) {\n  if(values.length) {\n    var unique_friends = {};\n    values.forEach(function(friend) {\n      if(!unique_friends[friend]) {\n        unique_friends[friend] = true;\n      }\n    });\n    return Object.keys(unique_friends);\n  } else {\n    return values;\n  }\n}"
+       }
+   }
+}

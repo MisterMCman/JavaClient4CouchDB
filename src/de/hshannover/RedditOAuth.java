@@ -35,6 +35,8 @@ import com.google.api.client.http.UrlEncodedContent;
 // You will need to comment out or replace my custom Log statements.
 
 public class RedditOAuth {
+	
+	public static final Boolean LOGGING = false;
 
      public static final String OAUTH_API_DOMAIN = "https://oauth.reddit.com";
 
@@ -49,8 +51,8 @@ public class RedditOAuth {
     public static final String OAUTH_TOKEN_URL = "https://ssl.reddit.com/api/v1/access_token";
 
     // I think it is easier to create 2 reddit apps (one with 127.0.0.1 redirect URI)
-    public static final String MY_APP_ID = "YOUR-APP-ID";
-    public static final String MY_APP_SECRET = "YOUR-APP-SECRET";
+    public static final String MY_APP_ID = "WzVGT_qSQ1_RVA";
+    public static final String MY_APP_SECRET = "GXbW9R9V84o6RxHjdkNFwuDf6uY";
 
     public static final String SCOPE_ID = "identity,read,report";
 
@@ -73,7 +75,7 @@ public class RedditOAuth {
     public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     public static JSONObject getToken(String code) throws IOException {
-        logger.log(Level.INFO, "getToken for code=" + code);
+        if(LOGGING) logger.log(Level.INFO, "getToken for code=" + code);
         GenericUrl url = new GenericUrl(OAUTH_TOKEN_URL);
         Map<String, String> params = new HashMap<String, String>(3);
         params.put("grant_type", "client_credentials");
@@ -83,7 +85,6 @@ public class RedditOAuth {
 
         HttpRequestFactory requestFactory = HTTP_TRANSPORT
                 .createRequestFactory(new HttpRequestInitializer() {
-                    @Override
                     public void initialize(HttpRequest request) {
                         // request.setParser( new JsonObjectParser(JSON_FACTORY) );
                         request.getHeaders().setBasicAuthentication(MY_APP_ID, MY_APP_SECRET);
@@ -98,7 +99,7 @@ public class RedditOAuth {
             if (response.isSuccessStatusCode()) {
 
                 String json = response.parseAsString();
-                logger.log(Level.INFO, "Success with " + json);
+                if(LOGGING) logger.log(Level.INFO, "Success with " + json);
 
                 // Parse with org.json
                 JSONTokener tokener = null;
@@ -112,7 +113,7 @@ public class RedditOAuth {
                 // "refresh_token": "vzZ0PP0A4k-twzSuVyvRN7uH2JY",
                 // "scope": "identity"}
             } else
-                logger.log(Level.WARNING , "Request failed with " + response.getStatusCode());
+            	if(LOGGING) logger.log(Level.WARNING , "Request failed with " + response.getStatusCode());
         } finally {
             response.disconnect();
         }
@@ -127,13 +128,12 @@ public class RedditOAuth {
 
     // A generic get fn to build the rest of my API calls around
     public static JSONObject getObject( final String surl, final String token ) throws IOException {
-        logger.log(Level.INFO, "get for URL=" + surl);
+    	if(LOGGING) logger.log(Level.INFO, "get for URL=" + surl);
 
         GenericUrl url = new GenericUrl( surl );
 
         HttpRequestFactory requestFactory = HTTP_TRANSPORT
                 .createRequestFactory(new HttpRequestInitializer() {
-                    @Override
                     public void initialize(HttpRequest request) {
                         // request.setParser( new JsonObjectParser(JSON_FACTORY) );
                         request.getHeaders().setAuthorization( "bearer " + token );
@@ -150,7 +150,7 @@ public class RedditOAuth {
             if (response.isSuccessStatusCode()) {
 
                 String json = response.parseAsString();
-                logger.log(Level.INFO, "Success with " + json);
+                if(LOGGING) logger.log(Level.INFO, "Success with " + json);
 
                 // Parse with org.json
                 JSONTokener tokener = null;
@@ -160,7 +160,7 @@ public class RedditOAuth {
                 // Or Parse directly into Java objects using Jackson
 
             } else
-                logger.log(Level.WARNING, "Request failed with " + response.getStatusCode());
+            	if(LOGGING) logger.log(Level.WARNING, "Request failed with " + response.getStatusCode());
         } finally {
             response.disconnect();
         }
@@ -169,13 +169,12 @@ public class RedditOAuth {
     }
 
     public static JSONArray getArray( final String surl, final String token ) throws IOException {
-        logger.log(Level.INFO, "get for URL=" + surl);
+    	if(LOGGING) logger.log(Level.INFO, "get for URL=" + surl);
 
         GenericUrl url = new GenericUrl( surl );
 
         HttpRequestFactory requestFactory = HTTP_TRANSPORT
                 .createRequestFactory(new HttpRequestInitializer() {
-                    @Override
                     public void initialize(HttpRequest request) {
                         // request.setParser( new JsonObjectParser(JSON_FACTORY) );
                         request.getHeaders().setAuthorization( "bearer " + token );
@@ -192,14 +191,14 @@ public class RedditOAuth {
             if (response.isSuccessStatusCode()) {
 
                 String json = response.parseAsString();
-                logger.log(Level.INFO, "Success with " + json);
+                if(LOGGING) logger.log(Level.INFO, "Success with " + json);
 
                 // Parse with org.json
                 JSONTokener tokener = null;
                 tokener = new JSONTokener( json );
                 ja = new JSONArray(tokener);
             } else
-                logger.log(Level.WARNING, "Request failed with " + response.getStatusCode());
+            	if(LOGGING) logger.log(Level.WARNING, "Request failed with " + response.getStatusCode());
         } finally {
             response.disconnect();
         }

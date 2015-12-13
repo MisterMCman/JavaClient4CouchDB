@@ -2,6 +2,8 @@ package de.hshannover;
 
 import org.apache.commons.cli.*;
 
+import de.hshannover.couchapp.CouchApp;
+
 public class RedditCouch {
 
     public static void main(String[] args) {
@@ -23,26 +25,42 @@ public class RedditCouch {
     private static void processCLI(CommandLine line, Options options) {
         if (line.hasOption("h"))
             help(options);
+        
+        CouchApp capp = new CouchApp();
+        Boolean dbUsed = false;
+        Boolean process = false;
         if(line.hasOption("fetch")) {
-            //TODO
+            capp.fetch(line.getOptionValue("fetch"));
+            dbUsed= true;
+            process = true;
         }
         if(line.hasOption("use")) {
-            //TODO
+        	capp.use(line.getOptionValue("use"));
+        	dbUsed = true;
         }
-        if(line.hasOption("friends")) {
-            //TODO
-        }
-        if(line.hasOption("degreeCentrality")) {
-            //TODO
-        }
-        if(line.hasOption("process")) {
-            //TODO
-        }
-        if(line.hasOption("degreeCentralityMinMax")) {
-            //TODO
-        }
-        if(line.hasOption("bridges")) {
-            //TODO
+        if(dbUsed) {
+            if(line.hasOption("process")) {
+                capp.process();
+                process = false;
+            }
+            if(process) {
+            	System.out.println("after fetching a db you have to call process");
+            } else {
+                if(line.hasOption("friends")) {
+                    capp.friends(line.getOptionValue("friends"));
+                }
+                if(line.hasOption("degreeCentrality")) {
+                    capp.degreeCentrality(line.getOptionValue("degreeCentrality"));
+                }
+                if(line.hasOption("degreeCentralityMinMax")) {
+                    capp.degreeCentralityMinMax();
+                }
+                if(line.hasOption("bridges")) {
+                    //TODO
+                }
+            }
+        } else {
+        	System.out.println("you have to select a database with fetch or use");
         }
     }
 
