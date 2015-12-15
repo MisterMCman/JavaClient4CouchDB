@@ -55,8 +55,7 @@ public class DatabaseFetcher {
 			setDesignDoc();
 		System.out.println("fetching data..");
 		loadFromReddit();
-		System.out.println("done!"
-				+ "");
+		System.out.println("done!");
 	}
 	
 	private void setDesignDoc() {
@@ -84,10 +83,6 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 		}
 		
-		
-//		httpClient.put("http://localhost:5984/" + 
-//				nameOfSubReddit + 
-//				"/_design/graphQueries", designDoc.toString());
 	}
 
 	private void loadFromReddit() {
@@ -120,35 +115,56 @@ public class DatabaseFetcher {
 			System.out.println("Fetched after "+(round-1)+" rounds, collected "+idQueue.size()+ " IDs.");
 			
 			EdgeRepository repo = new EdgeRepository(Edge.class, db);
-			
-			for (String curId : idQueue) {
-				JSONArray arrResponse = RedditOAuth.getArray(RedditOAuth.OAUTH_API_DOMAIN + "/comments/" + curId,
-						accessToken.get("access_token").toString());
-				JSONObject author = (JSONObject) ((JSONObject) arrResponse.get(0)).getJSONObject("data").getJSONArray("children").get(0);
-				for(int i = 1; i < arrResponse.length(); i++) {
-					JSONArray comIt = ((JSONObject) arrResponse.get(i)).getJSONObject("data").getJSONArray("children");
-					for(int k = 0; k < comIt.length(); k++) {
-						JSONObject cur = (JSONObject) comIt.get(k);
-						// Do something reasonable with the comment here, i.e.
-						// insert into graph
-						
-						Edge e = new Edge();
-						e.setId(getEdgeId(author.getJSONObject("data").getString("author")
-								,cur.getJSONObject("data").getString("author")));
-						e.setLastActive(cur.getJSONObject("data").getInt("created"));
-						e.setTitle(cur.getJSONObject("data").getString("body"));
-						
-//						System.out.println(getEdgeId(author.getJSONObject("data").getString("author")
-//								,cur.getJSONObject("data").getString("author") ));
-						addEdge(repo, e);
-//						repo.add(e);
-						//TODO Rekusives weiterverarbeiten der "replies", momentan werden nur Top-Level Kommentare eingelesen
-					}
-				}
-			}
+			idQueue.parallelStream().forEach(
+				curId -> processComments(accessToken, repo, curId)
+			);
+//			for (String curId : idQueue) {
+//				processComments(accessToken, repo, curId);
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+	}
+
+	private void processComments(JSONObject accessToken, EdgeRepository repo,
+			String curId) {
+		JSONArray arrResponse;
+		try {
+			arrResponse = RedditOAuth.getArray(RedditOAuth.OAUTH_API_DOMAIN + "/comments/" + curId,
+					accessToken.get("access_token").toString());
+			
+			String author = ((JSONObject) ((JSONObject) arrResponse.get(0))
+					.getJSONObject("data").getJSONArray("children").get(0))
+					.getJSONObject("data").getString("author");
+			for(int i = 1; i < arrResponse.length(); i++) {
+				JSONArray comIt = ((JSONObject) arrResponse.get(i)).getJSONObject("data").getJSONArray("children");
+				saveComments(repo, author, comIt);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void saveComments(EdgeRepository repo, String author, JSONArray comIt) {
+		for(int k = 0; k < comIt.length(); k++) {
+			JSONObject curData = ((JSONObject) comIt.get(k)).getJSONObject("data");
+			
+			if (curData.has("author") && curData.has("created") && curData.has("body")) {
+				Edge e = new Edge();
+				String newAuthor = curData.getString("author");
+				e.setId(getEdgeId(author, newAuthor));
+				e.setLastActive(curData.getInt("created"));
+				e.setTitle(curData.getString("body"));
+				addEdge(repo, e);
+				
+				// Rekusives weiterverarbeiten der "replies"
+				if (curData.has("replies") && !curData.get("replies").equals("")) {
+					saveComments(repo, newAuthor, curData.getJSONObject("replies").getJSONObject("data").getJSONArray("children"));
+				}
+			}
+		}
 	}
 	
 	private String getEdgeId(String author1, String author2) {
@@ -164,12 +180,13 @@ public class DatabaseFetcher {
 	}
 	
 	private void addEdge(EdgeRepository repo, Edge e) {
-		Edge olde;
-		try {
-			olde = repo.get(e.getId());
-		} catch (DocumentNotFoundException e2) {
-			olde = null;
-		}
+		Edge olde = null;
+		if (repo.contains(e.getId()))
+			try {
+				olde = repo.get(e.getId());
+			} catch (DocumentNotFoundException e2) {
+				olde = null;
+			}
 		if(olde == null)
 			repo.add(e);
 		else if (olde.getLastActive() < e.getLastActive()){
