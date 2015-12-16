@@ -11,7 +11,7 @@ import de.hshannover.couchapp.CouchApp;
 public class RedditCouch {
 
 	public static void main(String[] args) throws IOException {
-		if(args == null || args.length == 0) {
+		if (args == null || args.length == 0) {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Enter Command:");
 			String line = null;
@@ -20,10 +20,10 @@ public class RedditCouch {
 				if ("exit".equals(line)) {
 					return;
 				} else {
-					if(!line.startsWith("-")) {
+					if (!line.startsWith("-")) {
 						line = "-".concat(line);
 					}
-					
+
 					evaluateCommand(line.split(" "));
 				}
 			}
@@ -31,7 +31,7 @@ public class RedditCouch {
 			evaluateCommand(args);
 		}
 	}
-	
+
 	private static void evaluateCommand(String[] args) {
 		CommandLineParser parser = new DefaultParser();
 
@@ -84,6 +84,7 @@ public class RedditCouch {
 					capp.degreeCentralityMinMax();
 				}
 				if (line.hasOption("bridges")) {
+					capp.bridges();
 					// TODO
 				}
 			}
