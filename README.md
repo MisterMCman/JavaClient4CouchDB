@@ -51,9 +51,9 @@ Beachte: `-use` muss nur einmal ausgeführt werden anschließend wird automatisc
 
 `help`
 
-## Bekannte Probleme
+## Bekannte Probleme und Hinweise
 
-1. Im CLI wird folgende Fehlermeldung ausgegeben. 
+1. Im CLI wird folgende Fehlermeldung ausgegeben
 
 ```SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
@@ -61,7 +61,8 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 
 Diese Fehlermeldung kann ignoriert werden
 
-2. Der Benutzername wurde falsch eingegeben
+2. Der Benutzername wird falsch eingegeben
+
 ``Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 	at java.util.ArrayList.rangeCheck(ArrayList.java:653)
 	at java.util.ArrayList.get(ArrayList.java:429)
