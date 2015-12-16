@@ -1,30 +1,47 @@
 package de.hshannover;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.apache.commons.cli.*;
 
 import de.hshannover.couchapp.CouchApp;
 
 public class RedditCouch {
 
-    public static void main(String[] args) {
-        CommandLineParser parser = new DefaultParser();
+    public static void main(String[] args) throws IOException {
+    		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    		System.out.print("Enter Command:");
+    		String line = null;
+    		while(!"exit".equals(line)) {
+    			line = br.readLine();
+    			if("exit".equals(line)) {
+    				return;
+    			} else {
+    				CommandLineParser parser = new DefaultParser();
 
-        Options options = new Options();
-        addOptions(options);
+            Options options = new Options();
+            addOptions(options);
 
-        try {
-            CommandLine line = parser.parse( options, args );
+            try {
+                CommandLine cmd = parser.parse( options, line.split(" ") );
 
-            processCLI(line, options);
-        } catch( ParseException exp ) {
-            System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
-            help(options);
-        }
+                processCLI(cmd, options);
+            } catch( ParseException exp ) {
+                System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+                help(options);
+            }
+
+    			}
+    		}
     }
 
     private static void processCLI(CommandLine line, Options options) {
-        if (line.hasOption("h"))
+        if (line.hasOption("h")) {
             help(options);
+            return;
+        }
         
         CouchApp capp = new CouchApp();
         Boolean dbUsed = false;
@@ -86,7 +103,6 @@ public class RedditCouch {
 
     private static void help(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("RedditCouch", options);
-        System.exit(0);
+        formatter.printHelp("RedditCouch", options);        
     }
 }

@@ -37,31 +37,38 @@ public class CouchApp {
 
 		ViewResult result = dbfetcher.getDb().queryView(friendsQuery);
 		NodeRepository repo = new NodeRepository(Node.class, dbfetcher.getDb());
-		for (ViewResult.Row row : result.getRows()) {
-			Node n = new Node();
-			n.setId(row.getKey());
-			// TODO comments z�hlen.. keine Ahnung wie das moeglich sein soll
-			n.setComments(0);
 
-			JSONArray jFriends = new JSONArray(row.getValue());
-			List<String> friends = new ArrayList<String>();
-			for (int i = 0; i < jFriends.length(); i++) {
-				friends.add((String) jFriends.get(i));
+		result.getRows().parallelStream().forEach(
+			row -> {
+				Node n = new Node();
+				n.setId(row.getKey());
+				//TODO comments z�hlen.. keine Ahnung wie das moeglich sein soll
+				n.setComments(0);
+				
+			    JSONArray jFriends = new JSONArray(row.getValue());
+			    List<String> friends = new ArrayList<String>();
+			    for (int i = 0; i < jFriends.length(); i++) {
+					friends.add((String) jFriends.get(i));
+				}
+			    n.setFriends(friends);
+			    addOrUpdateNode(repo, n);
 			}
-			n.setFriends(friends);
-			addOrUpdateNode(repo, n);
-		}
+		);
+
+
 		System.out.println("done!");
 	}
 
 	private void addOrUpdateNode(NodeRepository repo, Node n) {
-		Node oldn;
-		try {
-			oldn = repo.get(n.getId());
-		} catch (DocumentNotFoundException e) {
-			oldn = null;
-		}
-		if (oldn == null)
+
+		Node oldn = null;
+		if (repo.contains(n.getId()))
+			try {
+				oldn = repo.get(n.getId());
+			} catch (DocumentNotFoundException e) {
+				oldn = null;
+			}
+		if(oldn == null)
 			repo.add(n);
 		else {
 			n.setRevision(oldn.getRevision());
@@ -81,13 +88,7 @@ public class CouchApp {
 	}
 
 	public void bridges() {
-		// EdgeRepository kp = new EdgeRepository(Edge.class,
-		// dbfetcher.getDb());
-		// List<Edge> kanten = kp.getAll();
-		//
-		//// for (Edge e: kanten){
-		//// System.out.println(e.toString());
-		//// }
+	
 
 		ViewQuery edges = new ViewQuery().designDocId("_design/graphQueries").viewName("edges");
 
@@ -117,7 +118,6 @@ public class CouchApp {
 
 			}
 
-			// friendship:person:DenebVegaAltair:with:person:Fautonex
 		}
 		BridgeFinder bf = new BridgeFinder(numberOfNodes.size());
 		for (ViewResult.Row row : result.getRows()) {
@@ -129,6 +129,7 @@ public class CouchApp {
 		}
 		bf.bridge();
 	}
+	
 
 	public void friends(String keyToUser) {
 		ViewQuery friends2DQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("friends2D")
