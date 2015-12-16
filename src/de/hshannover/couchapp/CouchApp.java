@@ -2,7 +2,9 @@ package de.hshannover.couchapp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.ektorp.DocumentNotFoundException;
 import org.ektorp.ViewQuery;
@@ -38,13 +40,24 @@ public class CouchApp {
 
 		ViewResult result = dbfetcher.getDb().queryView(friendsQuery);
 		NodeRepository repo = new NodeRepository(Node.class, dbfetcher.getDb());
+		
+		HashMap<String, Integer> userComments = dbfetcher.getUserComments();
+//		for (Entry<String, Integer> entry : userComments.entrySet()) {
+//			  String key = entry.getKey();
+//			  Integer value = entry.getValue();
+//			  // do stuff
+//			  System.out.println("User: " + key + " has Comments " + value);
+//			}
 
 		result.getRows().parallelStream().forEach(
 			row -> {
 				Node n = new Node();
 				n.setId(row.getKey());
-				//TODO comments z�hlen.. keine Ahnung wie das moeglich sein soll
-				n.setComments(0);
+
+				if (userComments != null && userComments.containsKey(n.getId()))
+					n.setComments(userComments.get(n.getId()));
+				else
+					n.setComments(0);
 				
 			    JSONArray jFriends = new JSONArray(row.getValue());
 			    List<String> friends = new ArrayList<String>();

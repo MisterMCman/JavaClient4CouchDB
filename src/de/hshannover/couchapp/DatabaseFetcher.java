@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Queue;
 
 import org.apache.commons.io.IOUtils;
@@ -31,6 +32,7 @@ public class DatabaseFetcher {
 	private CouchDbConnector db;
 	private CouchDbInstance dbInstance;
 	private String nameOfSubReddit;
+	private HashMap<String, Integer> userComments = null;
 
 	private static final int MAX_ROUNDS = 100;
 	
@@ -53,6 +55,7 @@ public class DatabaseFetcher {
 	}
 
 	public void fetch() {
+		userComments = new HashMap<String, Integer>();
 		Boolean exists = dbInstance.checkIfDbExists(nameOfSubReddit);
 		db.createDatabaseIfNotExists();
 
@@ -289,7 +292,11 @@ public class DatabaseFetcher {
 				e.setId(getEdgeId(author, newAuthor));
 				e.setLastActive(curData.getInt("created"));
 				e.setTitle(curData.getString("body"));
+				if (e.getTitle().length() >= 10)
+					e.setTitle(e.getTitle().substring(0, 10));
 				addEdge(repo, e);
+				
+				incComments(newAuthor);
 
 				// Rekusives weiterverarbeiten der "replies"
 				if (curData.has("replies") && !curData.get("replies").equals("")) {
@@ -298,6 +305,12 @@ public class DatabaseFetcher {
 				}
 			}
 		}
+	}
+
+	private void incComments(String newAuthor) {
+		String author = "person:" + newAuthor; 
+		int count = userComments.containsKey(author) ? userComments.get(author) : 0;
+		userComments.put(author, count + 1);
 	}
 
 	private String getEdgeId(String author1, String author2) {
@@ -331,5 +344,9 @@ public class DatabaseFetcher {
 
 	public CouchDbConnector getDb() {
 		return db;
+	}
+	
+	public HashMap<String, Integer> getUserComments() {
+		return userComments;
 	}
 }
