@@ -10,6 +10,7 @@ import java.util.Queue;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -44,7 +45,7 @@ public class DatabaseFetcher {
 		this.nameOfSubReddit = nameOfSubReddit;
 		try {
 			HttpClient httpClient = new StdHttpClient.Builder().url(
-					"http://localhost:5984").build();
+					"http://localhost:5984").socketTimeout(0).build();
 
 			dbInstance = new StdCouchDbInstance(httpClient);
 			db = new StdCouchDbConnector(nameOfSubReddit, dbInstance);
