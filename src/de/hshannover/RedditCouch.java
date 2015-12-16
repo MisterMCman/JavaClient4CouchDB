@@ -55,7 +55,7 @@ public class RedditCouch {
 		}
 
 		CouchApp capp = new CouchApp();
-		Boolean dbUsed = false;
+		Boolean dbUsed = capp.hasDatabaseFetcher();
 		Boolean process = false;
 		if (line.hasOption("fetch")) {
 			capp.fetch(line.getOptionValue("fetch"));

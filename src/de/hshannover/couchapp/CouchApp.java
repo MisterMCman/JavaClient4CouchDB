@@ -10,9 +10,6 @@ import org.ektorp.ViewResult;
 import org.json.JSONArray;
 
 import de.hshannover.reps.BridgeFinder;
-import de.hshannover.reps.Edge;
-import de.hshannover.reps.EdgeRepository;
-import de.hshannover.reps.Graph;
 import de.hshannover.reps.Node;
 import de.hshannover.reps.NodeRepository;
 
@@ -29,6 +26,10 @@ public class CouchApp {
 
 	public void use(String nameOfSubReddit) {
 		dbfetcher = new DatabaseFetcher(nameOfSubReddit);
+	}
+	
+	public boolean hasDatabaseFetcher() {
+		return dbfetcher != null;
 	}
 
 	public void process() {
