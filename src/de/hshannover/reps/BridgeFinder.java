@@ -13,6 +13,7 @@ public class BridgeFinder {
 	public Map<Integer, String> intNodeMap = new HashMap<Integer, String>();
 	private int V; // No. of vertices
 	public Integer counter = 0;
+	public int nBridgesFound = 1;
 
 	// Array of lists for Adjacency List Representation
 	private LinkedList<Integer> adj[];
@@ -40,7 +41,6 @@ public class BridgeFinder {
 	// disc[] --> Stores discovery times of visited vertices
 	// parent[] --> Stores parent vertices in DFS tree
 	void bridgeUtil(int u, boolean visited[], int disc[], int low[], int parent[]) {
-
 		// Count of children in DFS Tree
 		int children = 0;
 
@@ -69,9 +69,11 @@ public class BridgeFinder {
 				// If the lowest vertex reachable from subtree
 				// under v is below u in DFS tree, then u-v is
 				// a bridge
+				
 				if (low[v] > disc[u]) {
 					// System.out.println(u+" "+v);
-					System.out.println(intNodeMap.get(u) + "\t" + "\t" + intNodeMap.get(v));
+					System.out.println(intNodeMap.get(u) + " <==> " + intNodeMap.get(v) + " #:" + nBridgesFound);
+					nBridgesFound++;
 				}
 
 			}
@@ -81,7 +83,7 @@ public class BridgeFinder {
 				low[u] = Math.min(low[u], disc[v]);
 		}
 	}
-
+	
 	// DFS based function to find all bridges. It uses recursive
 	// function bridgeUtil()
 	public void bridge() {
@@ -105,6 +107,7 @@ public class BridgeFinder {
 		for (int i = 0; i < V; i++)
 			if (visited[i] == false)
 				bridgeUtil(i, visited, disc, low, parent);
+		
 	}
 
 	public void addEdgeString(String node1, String node2) {
