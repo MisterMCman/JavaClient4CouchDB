@@ -21,11 +21,11 @@ Es folgt eine Beispielhafte Verwendung des CLI-Programms:
 
 Gib im CLI folgendes ein:
 
-`-fetch https://www.reddit.com/r/CatsStaringAtWalls -process`
+`-fetch CatsStaringAtWalls -process` or `-fetch https://www.reddit.com/r/CatsStaringAtWalls -process`
 
 Dies kann auch einzeln erfolgen als:
 
-1. Einlesen `-fetch https://www.reddit.com/r/CatsStaringAtWalls`
+1. Einlesen `-fetch CatsStaringAtWalls` or `-fetch https://www.reddit.com/r/CatsStaringAtWalls`
 
 2. Wenn erfolgt: `-use CatsStaringAtWalls -process`
 
