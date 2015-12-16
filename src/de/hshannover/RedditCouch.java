@@ -100,9 +100,9 @@ public class RedditCouch {
 		addDetailedOption(options, "use", "nameOfSubReddit", true,
 				"uses Subreddit from CouchDb");
 		addDetailedOption(options, "friends", "keyToUser", true,
-				"shows all friends of friends from a given user");
+				"shows all friends of friends from a given user. Input user like this person:UserName");
 		addDetailedOption(options, "degreeCentrality", "keyToUser", true,
-				"shows degreecentrality from a given user");
+				"shows degreecentrality from a given user. Input user like this person:UserName");
 		options.addOption("process", false,
 				"processes fetched data (saves friends of nodes in nodes)");
 		options.addOption("degreeCentralityMinMax", false,

@@ -1,19 +1,25 @@
 # JavaClient4CouchDB
+Beispielnutzung des Comand Line Interface (CLI) Programms:
 
-@ Eike:
-Kannst Dir einfach in Eclipse das Projekt importieren über:
-import > git > Projects from git > clone URI > https://github.com/MisterMCman/JavaClient4CouchDB.git
+## Daten einlesen und vorverarbeiten
+Gib im CLI folgendes ein:
+-fetch https://www.reddit.com/r/CatsStaringAtWalls -process
 
-Beispielnutzung des CLI Programms:
+Dies kann auch einzeln erfolgen als:
+1. Einlesen -fetch https://www.reddit.com/r/CatsStaringAtWalls
+2. Wenn erfolgt: -use CatsStaringAtWalls -process
 
--fetch https://www.reddit.com/r/CatsStaringAtWalls -process -degreeCentralityMinMax
+Beachte: fetch und process müssen nur initial angewendet werden. Anschließend sind die Daten in CouchDB hinterlegt und können mittels -use "SubredditName" verwendet werden.
 
-oooder auch einzeln:
+## Abfragen tätigen
+1. Datenbank bzw. Subreddit festlegen
+-use CatsStaringAtWalls
 
--fetch https://www.reddit.com/r/CatsStaringAtWalls
+Beachte: -use muss nur einmal ausgeführt werden anschließend wird automatisch die zuvor definierte Datenbank verwendet ist ist aber auch möglich -use "SubredditName" den folgenden Anfragen voranzustellen.
 
--use CatsStaringAtWalls -process
-
--use CatsStaringAtWalls -degreeCentralityMinMax
-
-(fetch und process müssen natürlich nur initial angewendet werden)
+2. Mögliche Abfragen
+friends person:labourgeoisie 
+degreeCentralityMinMax
+degreeCentrality person:labourgeoisie
+bridges
+help
