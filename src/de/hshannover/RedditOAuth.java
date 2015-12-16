@@ -164,6 +164,8 @@ public class RedditOAuth {
         } finally {
             response.disconnect();
         }
+        
+        System.out.println(jo);
 
         return jo;
     }
