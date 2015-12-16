@@ -47,14 +47,15 @@ public class RedditCouch {
 			help(options);
 		}
 	}
+	
+	private static CouchApp capp = new CouchApp();
 
 	private static void processCLI(CommandLine line, Options options) {
 		if (line.hasOption("h")) {
 			help(options);
 			return;
 		}
-
-		CouchApp capp = new CouchApp();
+		
 		Boolean dbUsed = capp.hasDatabaseFetcher();
 		Boolean process = false;
 		if (line.hasOption("fetch")) {
