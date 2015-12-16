@@ -21,6 +21,11 @@
        "degreeMinMax": {
            "map": "function(doc) {\n  if(!doc._id.match(/^person:/)) return\n  if(doc.friends) {\n    emit(doc.friends.length, doc._id)\n  }\n}",
            "reduce": "function(key, values, rereduce) {\n  if(values.length) {\n    var unique_friends = {};\n    values.forEach(function(friend) {\n      if(!unique_friends[friend]) {\n        unique_friends[friend] = true;\n      }\n    });\n    return Object.keys(unique_friends);\n  } else {\n    return values;\n  }\n}"
+       },
+       
+       "edges": {
+           "map": "function(doc) {\n  if(doc._id.match(/^friendship:/)){emit(doc._id, doc._id)}\n}"
+       }
        }
    }
 }

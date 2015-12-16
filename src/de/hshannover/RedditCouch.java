@@ -56,6 +56,7 @@ public class RedditCouch {
                     capp.degreeCentralityMinMax();
                 }
                 if(line.hasOption("bridges")) {
+                	capp.bridges();
                     //TODO
                 }
             }
