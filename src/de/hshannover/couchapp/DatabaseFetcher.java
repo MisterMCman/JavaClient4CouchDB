@@ -146,18 +146,18 @@ public class DatabaseFetcher {
 		while (!done) {
 			JSONObject response = null;
 			for (int t = 1; t <= 5; t++) {
+				Date startedRequest = new Date();
+				
 				try {
-					Date startedRequest = new Date();
-					
 					response = RedditPublic.getObject(RedditPublic.BaseDomain
 							+ restRequestPath + listingArguments);
 													
-					System.out.println("fetch ("+getDiffInMs(new Date(), startedRequest)+"ms): " + RedditPublic.BaseDomain
+					System.out.println("fetched ("+getDiffInMs(new Date(), startedRequest)+"ms): " + RedditPublic.BaseDomain
 							+ restRequestPath + listingArguments);
 					
 					break;
 				} catch (Exception ex) {
-					System.out.println("failed fetch (" + t + "): "
+					System.out.println("faileded fetch (" + t + ")  ("+getDiffInMs(new Date(), startedRequest)+"ms): "
 							+ RedditPublic.BaseDomain + restRequestPath + listingArguments);
 				}
 			}
@@ -194,15 +194,27 @@ public class DatabaseFetcher {
 		}
 
 		System.out.println("Fetched after " + (round - 1) + " rounds, collected "
-				+ idQueue.size() + " IDs. took: "+getDiffInMs(new Date(), started));
+				+ idQueue.size() + " topics. took: "+getDiffInMs(new Date(), started)+"ms");
 
 		Date startedComments = new Date();
 		
 		EdgeRepository repo = new EdgeRepository(Edge.class, db);
-		idQueue.parallelStream().forEach(curId -> processComments(repo, curId));
+		
+		this.postsToProcess = idQueue.size();
+		this.postsProcessed = 0;
+		
+		idQueue.parallelStream().forEach(curId -> {			
+			processComments(repo, curId);
+			
+			
+			System.out.println("processed Comments: "+(this.postsProcessed++)+" / "+(this.postsToProcess));
+		});
 		
 		System.out.println("Fetching comments took: "+getDiffInMs(new Date(), startedComments));
 	}
+	
+	private int postsToProcess = 0;
+	private int postsProcessed = 0;
 
 	private void processComments(JSONObject accessToken, EdgeRepository repo,
 			String curId) {
@@ -234,16 +246,18 @@ public class DatabaseFetcher {
 
 		JSONArray arrResponse = null;
 		for (int t = 1; t <= 5; t++) {
+			Date startedRequest = new Date();
+			
 			try {
-				System.out.println("fetch: " + RedditPublic.BaseDomain
-						+ restRequestPath + listingArguments);
-
 				arrResponse = RedditPublic.getArray(RedditPublic.BaseDomain
 						+ restRequestPath + listingArguments);
 				
+				System.out.println("fetched ("+getDiffInMs(new Date(), startedRequest)+"ms): " + RedditPublic.BaseDomain
+						+ restRequestPath + listingArguments);
+				
 				break;
-			} catch (Exception e) {
-				System.out.println("failed fetch (" + t + "): "
+			} catch (Exception ex) {
+				System.out.println("faileded fetch (" + t + ")  ("+getDiffInMs(new Date(), startedRequest)+"ms): "
 						+ RedditPublic.BaseDomain + restRequestPath + listingArguments);
 			}
 		}
