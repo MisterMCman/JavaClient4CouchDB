@@ -13,7 +13,7 @@ public class BridgeFinder {
 	public Map<Integer, String> intNodeMap = new HashMap<Integer, String>();
 	private int V; // No. of vertices
 	public Integer counter = 0;
-	public int nBridgesFound = 1;
+	public int nBridgesFound = 0;
 
 	// Array of lists for Adjacency List Representation
 	private LinkedList<Integer> adj[];
@@ -72,8 +72,8 @@ public class BridgeFinder {
 				
 				if (low[v] > disc[u]) {
 					// System.out.println(u+" "+v);
-					System.out.println(intNodeMap.get(u) + " <==> " + intNodeMap.get(v) + " #:" + nBridgesFound);
 					nBridgesFound++;
+					System.out.println(intNodeMap.get(u) + "\t <==> \t" + intNodeMap.get(v) + " " +nBridgesFound);
 				}
 
 			}
@@ -107,6 +107,7 @@ public class BridgeFinder {
 		for (int i = 0; i < V; i++)
 			if (visited[i] == false)
 				bridgeUtil(i, visited, disc, low, parent);
+		System.out.println("---------" + nBridgesFound +" Bridges gefunden------");
 		
 	}
 

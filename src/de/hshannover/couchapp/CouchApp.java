@@ -107,33 +107,30 @@ public class CouchApp {
 	}
 
 	public void bridges() {
-	
-
 		ViewQuery edges = new ViewQuery().designDocId("_design/graphQueries").viewName("edges");
-
 		ViewResult result = dbfetcher.getDb().queryView(edges);
-		System.out.println("RowSize: " + result.getRows().size());
+		//System.out.println("RowSize: " + result.getRows().size());
 
 		List<String> numberOfNodes = new ArrayList<String>();
 
 		for (ViewResult.Row row : result.getRows()) {
 			// Integer[] i = Integer row.getValue();
-			System.out.println(row.getValue());
+			//System.out.println(row.getValue());
 			
 			List<String> str = Arrays.asList(row.getValue().split(":"));
 			if (str.get(2).equals(str.get(5))) {
-				System.out.println("Nodes identisch!");
-				System.out.println();
+				//System.out.println("Nodes identisch!");
+				//System.out.println();
 			} else {
 				if (!numberOfNodes.contains(str.get(2))) {
 					numberOfNodes.add(str.get(2));
-					System.out.println(str.get(2) + " hinzugefügt");
+					//System.out.println(str.get(2) + " hinzugefügt");
 				}
 				if (!numberOfNodes.contains(str.get(5))) {
 					numberOfNodes.add(str.get(5));
-					System.out.println(str.get(5) + " hinzugefügt");
+					//System.out.println(str.get(5) + " hinzugefügt");
 				}
-				System.out.println();
+				//System.out.println();
 
 			}
 
