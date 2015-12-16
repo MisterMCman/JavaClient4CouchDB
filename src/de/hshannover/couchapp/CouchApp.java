@@ -20,6 +20,11 @@ public class CouchApp {
 	DatabaseFetcher dbfetcher;
 
 	public void fetch(String urlToSubReddit) {
+		if (urlToSubReddit.contains("https://www.reddit.com/") ) {
+			// do nothing
+		} else {
+			urlToSubReddit = "https://www.reddit.com/r/" + urlToSubReddit;
+		}
 		String[] tmp = urlToSubReddit.split("/");
 		dbfetcher = new DatabaseFetcher(tmp[tmp.length - 1]);
 

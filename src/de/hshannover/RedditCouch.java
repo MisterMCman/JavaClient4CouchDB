@@ -95,7 +95,7 @@ public class RedditCouch {
 	}
 
 	private static void addOptions(Options options) {
-		addDetailedOption(options, "fetch", "urlToSubReddit", true,
+		addDetailedOption(options, "fetch", "nameOfSubReddit or urlToSubReddit", true,
 				"fetches Subreddit to CouchDb");
 		addDetailedOption(options, "use", "nameOfSubReddit", true,
 				"uses Subreddit from CouchDb");
