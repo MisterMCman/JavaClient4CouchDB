@@ -3,6 +3,7 @@
 ## Wir richtige ich dieses Projekt in meinem Eclipse ein?
 
 Diese Projekt verwendet Maven um Bibliotheken einzubinden. Um dieses Projekt auf dem eigenen Rechner zu importieren geht man am besten wie folgt vor:
+
 1. Klonen Sie dieses Projekt über eine Installation Git oder über andere Tools wie SourceTree in Ihren Eclipse Workspace
 
 2. Im nächsten Schritt muss das Projekt als Maven-Projekt importiert werden 
