@@ -1,20 +1,21 @@
 # JavaClient4CouchDB
 
-## Wir richtige ich dieses Projekt in meinem Eclipse ein?
+## Wir richtige ich dieses Projekt in Eclipse ein?
 
-Diese Projekt verwendet Maven um Bibliotheken einzubinden. Um dieses Projekt auf dem eigenen Rechner zu importieren geht man am besten wie folgt vor:
+Dieses Projekt verwendet Maven um Bibliotheken einzubinden. Um dieses Projekt auf dem eigenen Rechner zu importieren geht man am besten wie folgt vor:
 
-1. Klone dieses Projekt über Git oder über andere Tools wie z.B. SourceTree in den Eclipse Workspace
+1. Klone das Projekt über Git oder über andere Tools wie z.B. SourceTree in den Eclipse Workspace
 
-2. Im nächsten Schritt muss das Projekt als Maven-Projekt importiert werden 
+2. Im nächsten Schritt importiere es als Maven-Projekt
 
-	- File > Import > Maven > Existing Maven Projects > Next
+	- File > Import > Maven > Existing Maven Projects > **Next**
 	- Wähle den Ordner in welchen das Projekt geklont wurde also z.B. `workspace/JavaClient4CouchDB`
-	- Setze einen Haken beim Projekt und bestätige mit Finish
+	- Setze einen Haken beim Projekt und bestätige mit **Finish**
 	
 ## Die Verwendung
 
 Die main-Methode des Programms liegt in der Klasse `RedditCouch.java` starte diese mittels Run in Eclipse. In der Console wird `Enter Command:` ausgegeben. 
+Bei größeren Subreddits kann es beim aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
 Es folgt eine Beispielhafte Verwendung des CLI-Programms:
 
 ### Daten einlesen und vorverarbeiten
@@ -52,6 +53,7 @@ Beachte: `-use` muss nur einmal ausgeführt werden anschließend wird automatisc
 `help`
 
 ## Bekannte Probleme und Hinweise
+- Bei größeren Subreddits kann es beim aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
+- [SLF4J Error how it was solved](http://saltnlight5.blogspot.com.es/2013/08/how-to-configure-slf4j-with-different.html)
+- Einge erfordert `person:` vor Username. Geht jetzt auch nur mit dem Reddit-Benutzernamen.
 
-Momentan gibt es keine Probleme oder Hinweise. Bisherige Probleme wurden behoben.
-[SLF4J Error how it was solved](http://saltnlight5.blogspot.com.es/2013/08/how-to-configure-slf4j-with-different.html)

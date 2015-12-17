@@ -10,7 +10,6 @@ import java.util.Queue;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
@@ -161,7 +160,7 @@ public class DatabaseFetcher {
 					
 					break;
 				} catch (Exception ex) {
-					System.out.println("faileded fetch (" + t + ")  ("+getDiffInMs(new Date(), startedRequest)+"ms): "
+					System.out.println("failed to fetch (" + t + ")  ("+getDiffInMs(new Date(), startedRequest)+"ms): "
 							+ RedditPublic.BaseDomain + restRequestPath + listingArguments);
 				}
 			}
