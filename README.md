@@ -54,3 +54,4 @@ Beachte: `-use` muss nur einmal ausgeführt werden anschließend wird automatisc
 ## Bekannte Probleme und Hinweise
 
 Momentan gibt es keine Probleme oder Hinweise. Bisherige Probleme wurden behoben.
+[SLF4J Error how it was solved](http://saltnlight5.blogspot.com.es/2013/08/how-to-configure-slf4j-with-different.html)
