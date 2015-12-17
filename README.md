@@ -15,7 +15,8 @@ Dieses Projekt verwendet Maven um Bibliotheken einzubinden. Um dieses Projekt au
 ## Die Verwendung
 
 Die main-Methode des Programms liegt in der Klasse `RedditCouch.java` starte diese mittels Run in Eclipse. In der Console wird `Enter Command:` ausgegeben. 
-Bei größeren Subreddits kann es beim aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
+Bei größeren Subreddits kann es beim Aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
+
 Es folgt eine Beispielhafte Verwendung des CLI-Programms:
 
 ### Daten einlesen und vorverarbeiten
@@ -53,7 +54,7 @@ Beachte: `-use` muss nur einmal ausgeführt werden anschließend wird automatisc
 `help`
 
 ## Bekannte Probleme und Hinweise
-- Bei größeren Subreddits kann es beim aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
+- Bei größeren Subreddits kann es beim Aufruf von `bridges` zu einem Stackoverflow kommen. Um diesem Problem vorzubeugen setzte unter `Run Configurations > Reiter: Arguments > VM-Arguments`: `-Xss100m`. 
 - [SLF4J Error how it was solved](http://saltnlight5.blogspot.com.es/2013/08/how-to-configure-slf4j-with-different.html)
-- Einge erfordert `person:` vor Username. Geht jetzt auch nur mit dem Reddit-Benutzernamen.
+- Eingabe erfordert `person:` vor Username. Geht jetzt auch nur mit dem Reddit-Benutzernamen.
 
