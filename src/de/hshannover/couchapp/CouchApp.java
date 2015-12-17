@@ -98,12 +98,12 @@ public class CouchApp {
 	public void degreeCentralityMinMax() {
 		ViewQuery degreeQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("degreeMinMax").group(true)
 				.descending(true).limit(1);
+		ViewQuery edgesQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("allEdges");
 
-		System.out.println("Max: " + dbfetcher.getDb().queryView(degreeQuery).getRows().get(0).getKey());
-
+		System.out.println(("Max: " + (Float.parseFloat(dbfetcher.getDb().queryView(degreeQuery).getRows().get(0).getKey())) / (float)(dbfetcher.getDb().queryView(edgesQuery).getRows().get(0).getValueAsInt())));
 		degreeQuery.descending(false);
 
-		System.out.println("Min: " + dbfetcher.getDb().queryView(degreeQuery).getRows().get(0).getKey());
+		System.out.println("Min: " + (Float.parseFloat(dbfetcher.getDb().queryView(degreeQuery).getRows().get(0).getKey()))/dbfetcher.getDb().queryView(edgesQuery).getRows().get(0).getValueAsInt() );
 	}
 
 	public void bridges() {
