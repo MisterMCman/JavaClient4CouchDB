@@ -148,6 +148,7 @@ public class CouchApp {
 	
 
 	public void friends(String keyToUser) {
+		keyToUser = rebuildUserKey(keyToUser);
 		ViewQuery friends2DQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("friends2D")
 				.key(keyToUser);
 
@@ -156,8 +157,20 @@ public class CouchApp {
 			System.out.println(row.getValue());
 		}
 	}
+	
+	public String rebuildUserKey(String keyToUser) {
+		if (keyToUser.contains("person:") ) {
+			return keyToUser;
+		} else {
+			return "person:" + keyToUser;
+		}
+		
+	}
+	
 
 	public void degreeCentrality(String keyToUser) {
+		keyToUser = rebuildUserKey(keyToUser);
+
 		ViewQuery degreeQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("degree").key(keyToUser);
 
 		ViewQuery edgesQuery = new ViewQuery().designDocId("_design/graphQueries").viewName("allEdges");
